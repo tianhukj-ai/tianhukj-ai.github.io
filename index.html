@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天互科技集团 - 数字化解决方案矩阵</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
+            color: #e0e0e0;
+            line-height: 1.6;overflow-x: hidden;
+            padding-bottom: 80px; /* 为底部状态栏留出空间 */
+        }
+
+        /* 星空背景动画 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 头部 */
+        header {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, rgba(0, 150, 255, 0.1), rgba(138, 43, 226, 0.1));
+            border-radius: 20px;
+            margin-bottom: 40px;border: 1px solid rgba(0, 150, 255, 0.3);
+            box-shadow: 0 0 50px rgba(0, 150, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 150, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00d4ff, #0096ff, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(0, 150, 255, 0.5);position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #00d4ff;
+            letter-spacing: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ========== 终端样式（缩小版） ========== */
+        .terminal-container {
+            margin: 30px 0 40px 0;
+            background: rgba(10, 15, 30, 0.9);
+            border: 2px solid #00d4ff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);max-width: 900px; /* 限制最大宽度 */margin-left: auto;
+            margin-right: auto;
+        }
+
+        .terminal-header {
+            background: linear-gradient(135deg, rgba(0, 150, 255, 0.2), rgba(0, 100, 150, 0.2));
+            padding: 10px 20px;
+            border-bottom: 1px solid #00d4ff;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #00d4ff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        .terminal-line:nth-child(1) { animation-delay: 0.3s; }
+        .terminal-line:nth-child(2) { animation-delay: 0.8s; }
+        .terminal-line:nth-child(3) { animation-delay: 1.3s; }
+        .terminal-line:nth-child(4) { animation-delay: 1.8s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .terminal-prompt {
+            color: #00ff88;
+            margin-right: 8px;
+        }
+
+        .terminal-command {
+            color: #00d4ff;
+        }
+
+        .terminal-output {
+            color: #e0e0e0;
+            padding-left: 15px;
+        }
+
+        .terminal-output .highlight {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #00ff88;
+            animation: blink 1s infinite;margin-left: 3px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* ========== 底部状态栏 ========== */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 15, 30, 0.95);
+            border-top: 2px solid #00d4ff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            z-index: 1000;backdrop-filter: blur(10px);box-shadow: 0 -5px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;color: #00d4ff;
+        }
+
+        .status-icon {
+            font-size: 1.2em;
+        }
+
+        .status-label {
+            color: #888;
+            margin-right: 5px;
+        }
+
+        .status-value {
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .status-value.warning {
+            color: #ffaa00;
+        }
+
+        .status-value.success {
+            color: #00ff88;
+        }
+
+        /* 状态栏动画 */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .status-item:hover {
+            animation: pulse 1s infinite;
+        }
+
+        /* ========== 原有样式继续 ========== */
+
+        /* 卡片样式 */
+        .section {
+            margin-bottom: 60px;
+            background: rgba(20, 25, 45, 0.6);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 150, 255, 0.3);
+            border-color: rgba(0, 150, 255, 0.5);
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            color: #00d4ff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 5px;
+            height: 40px;
+            background: linear-gradient(180deg, #00d4ff, #8a2be2);
+            border-radius: 5px;
+        }
+
+        .domain {
+            font-size: 1.1em;
+            color: #888;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .domain a {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .domain a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #00d4ff;
+        }
+
+        /* 产品卡片 */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, rgba(0, 150, 255, 0.05), rgba(138, 43, 226, 0.05));
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .product-card:hover::before {
+            left: 100%;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0, 150, 255, 0.4);
+            border-color: #00d4ff;
+        }
+
+        .product-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .product-title {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .product-url {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .product-url a {
+            color: #0096ff;
+            text-decoration: none;
+        }
+
+        .product-desc {
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            padding: 8px 0;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features li::before {
+            content: '▹';
+            color: #00d4ff;
+            font-size: 1.2em;
+        }
+
+        /* 技术架构 */
+        .tech-stack {
+            background: rgba(0, 150, 255, 0.05);
+            border: 2px dashed rgba(0, 150, 255, 0.3);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .tech-layer {
+            background: rgba(20, 25, 45, 0.8);
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s;
+        }
+
+        .tech-layer:hover {
+            background: rgba(0, 150, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .tech-layer h4 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .tech-layer p {
+            color: #aaa;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(10, 14, 39, 0.8);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 150, 255, 0.2);
+            margin-top: 60px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            color: #aaa;
+        }
+
+        .contact-item a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        .copyright {
+            color: #666;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+
+        .slogan {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-top: 30px;
+            letter-spacing: 3px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .section-title {
+                font-size: 1.8em;
+            }
+            
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+            .terminal-body {
+                font-size: 0.75em;
+                padding: 15px;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 15px;
+                font-size: 0.75em;
+            }
+
+            .status-item {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div><div class="container">
+        <!-- 头部 -->
+        <header>
+            <h1>🚀 天互科技集团</h1>
+            <p class="subtitle">数字化解决方案矩阵</p>
+        </header>
+
+        <!-- 系统终端（缩小版） -->
+        <div class="terminal-container">
+            <div class="terminal-header">
+                SYSTEM TERMINAL
+            </div>
+            <div class="terminal-body">
+                <div class="terminal-line">
+                    <span class="terminal-prompt">admin@tianhu-nav:~$</span>
+                    <span class="terminal-command">initiate --system=tianhu-nav --security=level3</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-output">&gt; 系统初始化完成... 加载全息投影模块...</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-output">&gt; 检测到 <span class="highlight">8</span> 个项目节点</span>
+                </div>
+                <div class="terminal-line">
+                    <span class="terminal-output">&gt; 准备就绪，等待用户交互...<span class="cursor"></span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 天互科技 -->
+        <section class="section">
+            <h2 class="section-title">💼 天互科技 TianHu Technology</h2>
+            <p class="domain">主域名：<a href="http://tianhu.dpdns.org" target="_blank">tianhu.dpdns.org</a></p>
+            
+            <div class="products">
+                <div class="product-card">
+                    <div class="product-icon">🎮</div>
+                    <h3 class="product-title">Runner - 跑酷游戏平台</h3>
+                    <p class="product-url"><a href="http://runner.tianhu.dpdns.org" target="_blank">runner.tianhu.dpdns.org</a></p>
+                    <p class="product-desc">沉浸式3D跑酷游戏体验</p>
+                    <ul class="features">
+                        <li>流畅的跑酷体验</li>
+                        <li>全球排行榜系统</li>
+                        <li>自定义角色皮肤</li>
+                        <li>跨平台同步</li>
+                    </ul>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-icon">🌍</div>
+                    <h3 class="product-title">IP-AD - 智能IP服务</h3>
+                    <p class="product-url"><a href="http://ip-ad.tianhu.dpdns.org" target="_blank">ip-ad.tianhu.dpdns.org</a></p>
+                    <p class="product-desc">企业级IP地址管理与分析平台</p>
+                    <ul class="features">
+                        <li>IP地理位置查询</li>
+                        <li>访问统计分析</li>
+                        <li>IP黑名单管理</li>
+                        <li>CDN节点优化建议</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 天互生物 -->
+        <section class="section">
+            <h2 class="section-title">🧬 天互生物 TianHu Biotech</h2>
+            <p class="domain">主域名：<a href="http://tianhunat.qzz.io" target="_blank">tianhunat.qzz.io</a></p>
+            
+            <div class="products">
+                <div class="product-card">
+                    <div class="product-icon">🏥</div>
+                    <h3 class="product-title">核酸检测预约平台</h3>
+                    <p class="product-url"><a href="http://tianhunat.qzz.io" target="_blank">tianhunat.qzz.io</a></p>
+                    <p class="product-desc">智慧医疗预约系统</p>
+                    <ul class="features">
+                        <li>在线预约核酸检测</li>
+                        <li>检测点实时查询</li>
+                        <li>智能排队系统</li>
+                        <li>短信提醒服务</li>
+                    </ul>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-icon">📱</div>
+                    <h3 class="product-title">QRCode - 二维码生成</h3>
+                    <p class="product-url"><a href="http://qrcode.tianhunat.qzz.io" target="_blank">qrcode.tianhunat.qzz.io</a></p>
+                    <p class="product-desc">智能二维码生成系统</p>
+                    <ul class="features">
+                        <li>毫秒级生成速度</li>
+                        <li>加密防伪技术</li>
+                        <li>扫码数据追踪</li>
+                        <li>自定义样式设计</li>
+                    </ul>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-icon">⚙️</div>
+                    <h3 class="product-title">Admin - 管理员后台</h3>
+                    <p class="product-url"><a href="http://admin.tianhunat.qzz.io" target="_blank">admin.tianhunat.qzz.io</a></p>
+                    <p class="product-desc">统一管理控制中心</p>
+                    <ul class="features">
+                        <li>用户信息管理</li>
+                        <li>数据统计分析</li>
+                        <li>系统配置中心</li>
+                        <li>消息推送管理</li>
+                    </ul>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-icon">🔍</div>
+                    <h3 class="product-title">Result - 结果查询</h3>
+                    <p class="product-url"><a href="http://result.tianhunat.qzz.io" target="_blank">result.tianhunat.qzz.io</a></p>
+                    <p class="product-desc">核酸结果快速查询</p>
+                    <ul class="features">
+                        <li>快速结果查询</li>
+                        <li>电子报告下载</li>
+                        <li>隐私保护机制</li>
+                        <li>多渠道查询支持</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rozene Cloud -->
+        <section class="section">
+            <h2 class="section-title">☁️ Rozene Cloud - API及计算服务</h2>
+            <p class="domain">主域名：<a href="http://rozene.dpdns.org" target="_blank">rozene.dpdns.org</a></p>
+            
+            <div class="products">
+                <div class="product-card">
+                    <div class="product-icon">📧</div>
+                    <h3 class="product-title">Mail - 临时邮箱服务</h3>
+                    <p class="product-url"><a href="http://mail.rozene.dpdns.org" target="_blank">mail.rozene.dpdns.org</a></p>
+                    <p class="product-desc">即时临时邮箱解决方案</p>
+                    <ul class="features">
+                        <li>即时生成临时邮箱</li>
+                        <li>无需注册，即用即走</li>
+                        <li>自动邮件转发</li>
+                        <li>自定义过期时间</li>
+                        <li>垃圾邮件过滤</li>
+                    </ul>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-icon">🤖</div>
+                    <h3 class="product-title">Gemini API - AI中转</h3>
+                    <p class="product-url"><a href="http://gemini.rozene.dpdns.org" target="_blank">gemini.rozene.dpdns.org</a></p>
+                    <p class="product-desc">Google Gemini API 高速中转服务</p>
+                    <ul class="features">
+                        <li>高速API中转</li>
+                        <li>智能负载均衡</li>
+                        <li>全球CDN加速</li>
+                        <li>实时监控面板</li>
+                        <li>灵活计费方案</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技术架构 -->
+        <section class="section">
+            <h2 class="section-title">🎯 技术架构</h2>
+            <div class="tech-stack">
+                <div class="tech-layer">
+                    <h4>前端层 Frontend Layer</h4>
+                    <p>React · Vue · Next.js · TypeScript</p>
+                </div>
+                <div style="text-align: center; color: #00d4ff; font-size: 2em;">↓</div>
+                <div class="tech-layer">
+                    <h4>API网关 API Gateway</h4>
+                    <p>Nginx · Load Balancer · CDN</p>
+                </div>
+                <div style="text-align: center; color: #00d4ff; font-size: 2em;">↓</div>
+                <div class="tech-layer">
+                    <h4>微服务层 Microservices</h4>
+                    <p>Node.js · Python · Go · Docker</p>
+                </div>
+                <div style="text-align: center; color: #00d4ff; font-size: 2em;">↓</div>
+                <div class="tech-layer">
+                    <h4>数据层 Data Layer</h4>
+                    <p>PostgreSQL · Redis · MongoDB · S3</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer>
+            <h3 style="color: #00d4ff; margin-bottom: 20px;">📞 联系我们</h3>
+            <div class="contact-info">
+                <div class="contact-item">
+                    📧 商务合作：<a href="mailto:business@tianhu.tech">business@tianhu.tech</a>
+                </div>
+                <div class="contact-item">
+                    💬 技术支持：<a href="mailto:support@tianhu.tech">support@tianhu.tech</a>
+                </div>
+                <div class="contact-item">
+                    🌐 官方网站：<a href="http://tianhu.dpdns.org" target="_blank">tianhu.dpdns.org</a>
+                </div>
+            </div>
+            <p class="slogan">🚀 创新驱动 · 科技引领 · 共创未来 🚀</p>
+            <p class="copyright">© 2024 天互科技集团 | All Rights Reserved</p>
+        </footer>
+    </div>
+
+    <!-- ========== 底部状态栏 ========== -->
+    <div class="status-bar">
+        <div class="status-item">
+            <span class="status-icon">🛡️</span>
+            <span class="status-label">安全等级:</span>
+            <span class="status-value success">3级</span>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">⚡</span>
+            <span class="status-label">系统状态:</span>
+            <span class="status-value success">稳定</span>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">🔗</span>
+            <span class="status-label">量子连接:</span>
+            <span class="status-value success">已建立</span>
+        </div>
+        <div class="status-item">
+            <span class="status-icon">🕐</span>
+            <span class="status-label">地球标准时间:</span>
+            <span class="status-value" id="current-time">12:56:47</span>
+        </div>
+    </div>
+
+    <script>
+        // 生成星空背景
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // 实时更新时间
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('current-time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
